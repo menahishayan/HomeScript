@@ -18,6 +18,7 @@ The script will automatically search for matching substrings and set the accesso
 
 ## Dependencies
  - Python requests library
+ - Python JSON library
  
  ## Installation
   - Install the requests library `pip install requests` or `pip3 install requests`
