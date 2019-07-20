@@ -5,15 +5,16 @@ Used to toggle Homebridge accessories On or Off via python script, no Home app r
 
 ## Examples
 `python homeScript.py MainLight 0`  | Switch off  
-`python homeScript.py MainLight 1`  | Switch off  
+`python homeScript.py MainLight 1`  | Switch on  
 `python homeScript.py MainLight`   | Toggle
 
 ## Easy Match
 The script doesn't require full names of the accessories.  
-For example, if your light is called "MainLight", you can run:  
-`python homeScript.py MainLight 0`  
-or `python homeScript.py main 0`  
-The script will automatically search for matching substrings and toggle the accessory
+
+**For example**, if your light is called "MainLight", you can run:  
+`python homeScript.py MainLight 0` or  
+`python homeScript.py main 0`  
+The script will automatically search for matching substrings and set the accessory value
 
 ## Dependencies
  - Python requests library
@@ -36,19 +37,20 @@ The script will automatically search for matching substrings and toggle the acce
      - id : lists accessory names with AID and IID
      - type : lists accessory names with type [Lightbulb, Switch, Fan, etc.]
      - value : lists accessory names current state
+     - all : lists all of the above
  - \<accessory-name\> : toggles the accessory On or Off, or sets to value
    - Usage: `python homeScript.py <accessory-name> [argument]`
    - Arguments:
-   - \<none\> : toggles the state
-   - 0 : sets to OFF
-   - 1 : sets to ON
+     - \<none\> : toggles the state
+     - 0 : sets to OFF
+     - 1 : sets to ON
  - help : prints usage info
 
 ## PRs and Commit Template
-PRs and commits that you make to this repo must include the following:
-Type: bug-fix or enhancement
-Description: Brief description about what the commit achieves
-Notes: (heads ups/pointers to other developers if necessary)
+PRs and commits that you make to this repo must include the following:  
+- Type: bug-fix or enhancement
+- Description: Brief description about what the commit achieves
+- Notes: (heads ups/pointers to other developers if necessary)
 
 <hr/>
 
