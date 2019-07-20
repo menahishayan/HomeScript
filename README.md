@@ -38,6 +38,7 @@ The script will automatically search for matching substrings and set the accesso
      - type : lists accessory names with type [Lightbulb, Switch, Fan, etc.]
      - value : lists accessory names current state
      - all : lists all of the above
+     - json: prints all attributes in JSON string format
  - \<accessory-name\> : toggles the accessory On or Off, or sets to value
    - Usage: `python homeScript.py <accessory-name> [argument]`
    - Arguments:
@@ -55,6 +56,9 @@ PRs and commits that you make to this repo must include the following:
 <hr/>
 
 ## Changelog
+### v2.2
+- Added json listing support
+
 ### v2.1
 - Added type support to identify accessory type
 - Updated help doc

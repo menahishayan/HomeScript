@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # HomeScript - Python script to control homebridge devices using the command line
-# v2.1
+# v2.2
 # Created by Menahi Shayan. 2019.
 
 import requests
@@ -28,6 +28,9 @@ def selectAccessory(inputName):
     return {'aid':-1, 'iid':-1, 'type':'null', 'value': -1}
 
 def printAccessories(param=''):
+    if param == 'json':
+        print accessories
+        return
     for key in accessories:
         if param == 'aid':
             print str(accessories[key]['aid']) + ' ',
