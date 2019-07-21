@@ -16,6 +16,11 @@ The script doesn't require full names of the accessories.
 `python homeScript.py main 0`  
 The script will automatically search for matching substrings and set the accessory value
 
+## Group Actions
+You can set multiple accessories (of the same type) in a single command:
+`python homeScript.py all lights 1`  
+`python homeScript.py all switches 0`  
+
 ## Dependencies
  - Python requests library
  - Python JSON library
@@ -40,12 +45,15 @@ The script will automatically search for matching substrings and set the accesso
      - value : lists accessory names current state
      - all : lists all of the above
      - json: prints all attributes in JSON string format
- - \<accessory-name\> : toggles the accessory On or Off, or sets to value
+ - \<accessory-name\> : [EasyMatch Supported] toggles the accessory On or Off, or sets to value
    - Usage: `python homeScript.py <accessory-name> [argument]`
    - Arguments:
      - \<none\> : toggles the state
      - 0 : sets to OFF
      - 1 : sets to ON
+ - all : sets value of multiple HomeKit accessories
+   - Usage: `python homeScript.py all \<accessory-type\> value`
+   - \<accessory-type\> : [EasyMatch Supported] sets all \<accessory-type\> to <value>
  - help : prints usage info
 
 ## PRs and Commit Template
@@ -57,6 +65,9 @@ PRs and commits that you make to this repo must include the following:
 <hr/>
 
 ## Changelog
+### v3.0
+- Added group actions. You can now set values for all matching accessory types
+
 ### v2.2
 - Added json listing support
 

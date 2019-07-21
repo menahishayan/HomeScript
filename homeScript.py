@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # HomeScript - Python script to control homebridge devices using the command line
-# v2.1
+# v3.0
 # Created by Menahi Shayan. 2019.
 
 import requests
@@ -12,21 +12,27 @@ url = 'http://home.local:35945/'
 headers = {'Content-Type': 'Application/json','authorization': '031-45-154',}
 
 accessories={}
+selectedAccessories=[]
+selectedAccessoryNames={}
+argumentLength = len(sys.argv)
 
 def getAccessories():
     getAcc = requests.get(url + 'accessories', headers=headers)
     for item in getAcc.json()['accessories']:
-#        accessories.append({'aid':item['aid'],'iid':item['services'][1]['characteristics'][1]['iid'],'name':item['services'][1]['characteristics'][0]['value'],'value':item['services'][1]['characteristics'][1]['value']})
         accessories.update({str(item['services'][1]['characteristics'][0]['value']) : {'aid':item['aid'],'iid':item['services'][1]['characteristics'][1]['iid'],'type':item['services'][0]['characteristics'][2]['value'],'value':item['services'][1]['characteristics'][1]['value']}})
     return accessories
 
 def selectAccessory(inputName):
-    global accessoryName
     for key in accessories:
         if inputName in key.lower():
-            accessoryName = key
-            return accessories[key]
-    return {'aid':-1, 'iid':-1, 'type':'null', 'value': -1}
+            selectedAccessoryNames.update({accessories[key]['aid']:{'name':key}})
+            selectedAccessories.append({'aid':accessories[key]['aid'], 'iid':accessories[key]['iid'], 'value':accessories[key]['value']})
+
+def selectGroup(inputName):
+    for key in accessories:
+        if accessories[key]['type'].lower().startswith(inputName[:len(inputName)-2]):
+            selectedAccessoryNames.update({accessories[key]['aid']:{'name':key}})
+            selectedAccessories.append({'aid':accessories[key]['aid'], 'iid':accessories[key]['iid'], 'value':accessories[key]['value']})
 
 def printAccessories(param=''):
     if param == 'json':
@@ -58,15 +64,20 @@ def printHelp():
     print '\t\t\tid : lists accessory names with AID and IID'
     print '\t\t\ttype : lists accessory names with type'
     print '\t\t\tvalue : lists accessory names current state'
-    print '\n\t<accessory-name> : toggles the accessory On or Off, or sets to value'
+    print '\n\t<accessory-name> : [EasyMatch Supported] toggles the accessory On or Off, or sets to value'
     print '\t\t\tUsage: python homeScript.py <accessory-name> [value]'
+    print '\n\tall : sets value of multiple HomeKit accessories'
+    print '\t\tUsage: python homeScript.py all <accessory-type> value'
+    print '\t\t<accessory-type> : [EasyMatch Supported] sets all <accessory-type> to <value>'
     print '\n\thelp : prints usage info'
     print '\nEg: python homeScript.py MainLight'
-    print '    python homeScript.py main 0'
+    print '    python homeScript.py bedlight 0'
+    print '    python homeScript.py all lights 0'
+    print '    python homeScript.py all switches 1'
     print '\nCreated by Menahi Shayan.\n'
     sys.exit()
 
-if len(sys.argv)==1:
+if argumentLength==1:
     printHelp()
 
 if sys.argv[1] == 'help':
@@ -75,27 +86,35 @@ if sys.argv[1] == 'help':
 getAccessories()
 
 if sys.argv[1] == 'list':
-    printAccessories(sys.argv[2] if len(sys.argv)>2 else '')
+    printAccessories(sys.argv[2] if argumentLength>2 else '')
     sys.exit()
 
-obj = selectAccessory(sys.argv[1].lower())
+if sys.argv[1] == 'all':
+    if argumentLength>3:
+        selectGroup(sys.argv[2].lower())
+    else:
+        printHelp()
+else:
+    selectAccessory(sys.argv[1].lower())
 
-if obj['aid'] == -1:
-    print 'Accessory not found.\nHere are a list of accessories:\n'
-    printAccessories()
+if len(selectedAccessories) == 0:
+    print 'Accessory/Group not found.\nHere are a list of accessories:\n'
+    printAccessories('type')
     print '\nFor usage info type \'python homeScript.py help\''
     sys.exit()
-
-if len(sys.argv)>2:
-    setVal = str(sys.argv[2])
-elif obj['value'] == True:
-    setVal = '0'
 else:
-    setVal = '1'
+    for item in selectedAccessories:
+        if argumentLength>2:
+            item['value'] = sys.argv[argumentLength-1]
+        elif item['value'] == 0 or item['value'] == False:
+            item['value'] = '1'
+        else:
+            item['value'] = '0'
+        selectedAccessoryNames[item['aid']].update({'value': item['value']})
 
-setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":[{"aid":' + str(obj['aid']) + ',"iid":' + str(obj['iid']) + ',"value":' + setVal + '}]}')
+setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + json.dumps(selectedAccessories) + '}')
 
-if setReq.json()['characteristics'][0]['status'] == 0:
-    print accessoryName + ' is ' + ('On' if setVal == '1' else 'Off')
-else:
-    print 'An error occurred'
+#print setReq.json()['characteristics']
+
+for item in setReq.json()['characteristics']:
+    print selectedAccessoryNames[item['aid']]['name'] + (' is ' + ('On' if selectedAccessoryNames[item['aid']]['value'] == '1' else 'Off')) if item['status'] == 0 else ('Error: ' + item['status'])
