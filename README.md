@@ -27,10 +27,12 @@ You can set multiple accessories (of the same type) in a single command:
  
  ## Installation
   - Install the requests library `pip install requests` or `pip3 install requests`
-  - Move **homeScript.py** to a convenient location
-  - Edit the script to include your homebridge URL, port and authorization key
-  - Change permissions `chmod +x /path/to/homeScript.py` (on linux)
-
+  - On your client computer: Move **homeScript.py** to a convenient location 
+    - Edit the script to include your homebridge URL, port and authorization key
+    - Change permissions `chmod +x /path/to/homeScript.py` (on linux)
+  - On your HomeBridge: edit your **/etc/default/homebridge** to run in insecure mode every time it starts. 
+    - `HOMEBRIDGE_OPTS=-I -U /var/lib/homebridge`
+    
 ## Usage
 `python homeScript.py [option] [argument]`
 ### Options:
