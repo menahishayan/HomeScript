@@ -17,7 +17,7 @@ The script doesn't require full names of the accessories.
 The script will automatically search for matching substrings and set the accessory value
 
 ## Group Actions
-You can set multiple accessories (of the same type) in a single command:
+You can set multiple accessories (of the same type) in a single command:  
 `python homeScript.py all lights 1`  
 `python homeScript.py all switches 0`  
 
@@ -46,14 +46,14 @@ You can set multiple accessories (of the same type) in a single command:
      - all : lists all of the above
      - json: prints all attributes in JSON string format
  - \<accessory-name\> : [EasyMatch Supported] toggles the accessory On or Off, or sets to value
-   - Usage: `python homeScript.py <accessory-name> [argument]`
-   - Arguments:
+   - Usage: `python homeScript.py <accessory-name> [value]`
+   - Values:
      - \<none\> : toggles the state
      - 0 : sets to OFF
      - 1 : sets to ON
  - all : sets value of multiple HomeKit accessories
-   - Usage: `python homeScript.py all \<accessory-type\> value`
-   - \<accessory-type\> : [EasyMatch Supported] sets all \<accessory-type\> to <value>
+   - Usage: `python homeScript.py all <accessory-type> value`
+   - \<accessory-type\> : [EasyMatch Supported] sets all \<accessory-type\> to \<value\>
  - help : prints usage info
 
 ## PRs and Commit Template
