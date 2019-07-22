@@ -32,6 +32,7 @@ You can set multiple accessories (of the same type) in a single command:
     - Change permissions `chmod +x /path/to/homeScript.py` (on linux)
   - On your HomeBridge: edit your **/etc/default/homebridge** to run in insecure mode every time it starts. 
     - `HOMEBRIDGE_OPTS=-I -U /var/lib/homebridge`
+    - Restart your homebridge for the changes to take effect: `sudo systemctl restart homebridge.service` or the equivalent command on your device.
     
 ## Usage
 `python homeScript.py [option] [argument]`
@@ -57,6 +58,15 @@ You can set multiple accessories (of the same type) in a single command:
    - Usage: `python homeScript.py all <accessory-type> value`
    - \<accessory-type\> : [EasyMatch Supported] sets all \<accessory-type\> to \<value\>
  - help : prints usage info
+ - debug : generates debug log file.
+   - Usage: `python homeScript.py debug <command>`
+   - Eg: `python homeScript.py debug all lights 0`
+
+## Troubleshooting/Error Reporting/Contributing
+The `debug` option helps generate a logfile for troubleshooting and error detection.  
+ - If you face an error, open a new issue on this repo prefixed by [Error] describing the error and attach your **both** your debug log and your exception log, along with any other outputs you receive.
+ - If you would like to help improve the tool or request features, open an issue prefixed by [Feature Request] describing the functionality.
+ - You **must** attach your debug log or else your issue will be closed. A simple debug log can be obtained from `python homeScript.py debug list`
 
 ## PRs and Commit Template
 PRs and commits that you make to this repo must include the following:  
@@ -67,6 +77,9 @@ PRs and commits that you make to this repo must include the following:
 <hr/>
 
 ## Changelog
+### v3.0.1
+- Added debug support
+
 ### v3.0
 - Added group actions. You can now set values for all matching accessory types
 
