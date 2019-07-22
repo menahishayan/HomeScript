@@ -21,7 +21,8 @@ selectedAccessories=[]
 selectedAccessoryNames={}
 argumentLength = len(sys.argv)
 
-logging.basicConfig(filename='homescript_exception_' + date.today().strftime("%Y.%m.%d") + '.log',filemode = 'a', level=logging.DEBUG)
+exceptionFile='homescript_exception_' + date.today().strftime("%Y.%m.%d") + '.log'
+logging.basicConfig(filename=exceptionFile,filemode = 'a', level=logging.DEBUG)
 
 def getAccessories():
     global getAcc
@@ -34,6 +35,7 @@ def getAccessories():
         if sys.argv[1] == 'debug':
             # debugHandler(str(sys.exc_info()[0]))
             logging.error(Exception, exc_info=True)
+            print 'Exception logged: ' + exceptionFile
     return accessories
 
 def selectAccessory(inputName):
@@ -46,6 +48,7 @@ def selectAccessory(inputName):
         if sys.argv[1] == 'debug':
             # debugHandler(json.dumps(sys.exc_info()))
             logging.error(Exception, exc_info=True)
+            print 'Exception logged: ' + exceptionFile
 
 def selectGroup(inputName):
     try:
@@ -57,6 +60,7 @@ def selectGroup(inputName):
         if sys.argv[1] == 'debug':
             # debugHandler(json.dumps(sys.exc_info()))
             logging.error(Exception, exc_info=True)
+            print 'Exception logged: ' + exceptionFile
 
 def printAccessories(param=''):
     try:
@@ -80,6 +84,7 @@ def printAccessories(param=''):
         if sys.argv[1] == 'debug':
             # debugHandler(json.dumps(sys.exc_info()))
             logging.error(Exception, exc_info=True)
+            print 'Exception logged: ' + exceptionFile
 
 
 def printHelp():
@@ -188,6 +193,7 @@ except:
     if sys.argv[1] == 'debug':
         # debugHandler(json.dumps(sys.exc_info()))
         logging.error(Exception, exc_info=True)
+        print 'Exception logged: ' + exceptionFile
 
 if sys.argv[1] == 'debug':
     debugHandler('end')
