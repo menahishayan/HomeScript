@@ -4,22 +4,22 @@ Python script for command line control of [HomeBridge](https://github.com/nfarin
 Used to toggle Homebridge accessories On or Off via python script, no Home app required. You can set up a cronjob to enable automation, scripting and mimic other HomeKit functionalities
 
 ## Examples
-`python homeScript.py MainLight 0`  | Switch off  
-`python homeScript.py MainLight 1`  | Switch on  
-`python homeScript.py MainLight`   | Toggle
+`homeScript.py MainLight 0`  | Switch off  
+`homeScript.py MainLight 1`  | Switch on  
+`homeScript.py MainLight`   | Toggle
 
 ## Easy Match
 The script doesn't require full names of the accessories.  
 
 **For example**, if your light is called "MainLight", you can run:  
-`python homeScript.py MainLight 0` or  
-`python homeScript.py main 0`  
+`homeScript.py MainLight 0` or  
+`homeScript.py main 0`  
 The script will automatically search for matching substrings and set the accessory value
 
 ## Group Actions
 You can set multiple accessories (of the same type) in a single command:  
-`python homeScript.py all lights 1`  
-`python homeScript.py all switches 0`  
+`homeScript.py all lights 1`  
+`homeScript.py all switches 0`  
 
 ## Dependencies
  - Python requests library
@@ -35,10 +35,10 @@ You can set multiple accessories (of the same type) in a single command:
     - Restart your homebridge for the changes to take effect: `sudo systemctl restart homebridge.service` or the equivalent command on your device.
     
 ## Usage
-`python homeScript.py [option] [argument]`
+`homeScript.py [option] [argument]`
 ### Options:
  - list : lists all available HomeKit accessories
-   - Usage: `python homeScript.py list [argument]`
+   - Usage: `homeScript.py list [argument]`
    - Arguments:
      - \<none\> : lists accessory names
      - aid : lists accessory names with AID value
@@ -49,24 +49,24 @@ You can set multiple accessories (of the same type) in a single command:
      - all : lists all of the above
      - json: prints all attributes in JSON string format
  - \<accessory-name\> : [EasyMatch Supported] toggles the accessory On or Off, or sets to value
-   - Usage: `python homeScript.py <accessory-name> [value]`
+   - Usage: `homeScript.py <accessory-name> [value]`
    - Values:
      - \<none\> : toggles the state
      - 0 : sets to OFF
      - 1 : sets to ON
  - all : sets value of multiple HomeKit accessories
-   - Usage: `python homeScript.py all <accessory-type> value`
+   - Usage: `homeScript.py all <accessory-type> value`
    - \<accessory-type\> : [EasyMatch Supported] sets all \<accessory-type\> to \<value\>
  - help : prints usage info
  - debug : generates debug log file.
-   - Usage: `python homeScript.py debug <command>`
-   - Eg: `python homeScript.py debug all lights 0`
+   - Usage: `homeScript.py debug <command>`
+   - Eg: `homeScript.py debug all lights 0`
 
 ## Troubleshooting/Error Reporting/Contributing
 The `debug` option helps generate a logfile for troubleshooting and error detection.  
  - If you face an error, open a new issue on this repo prefixed by [Error] describing the error and attach your **both** your debug log and your exception log, along with any other outputs you receive.
  - If you would like to help improve the tool or request features, open an issue prefixed by [Feature Request] describing the functionality.
- - You **must** attach your debug log or else your issue will be closed. A simple debug log can be obtained from `python homeScript.py debug list`
+ - You **must** attach your debug log or else your issue will be closed. A simple debug log can be obtained from `homeScript.py debug list`
 
 ## PRs and Commit Template
 PRs and commits that you make to this repo must include the following:  
@@ -76,7 +76,18 @@ PRs and commits that you make to this repo must include the following:
 
 <hr/>
 
+## To Do
+⬜️ Color control for RGB and Hue Lights  
+⬜️ Control for PositionOpeners, GarageDoorOpener, LockMechanism  
+⬜️ Querying API interface to return status of devices to `stdout`  
+⬜️ Automation creation, viewing and monitoring without Home Hub  
+
+<hr/>
+
 ## Changelog
+### v3.0.2
+- Bug fix: HomeBridge was displayed as "0"
+
 ### v3.0.1
 - Added debug support
 

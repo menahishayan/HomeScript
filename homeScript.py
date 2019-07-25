@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # HomeScript - Python script to control homebridge devices using the command line
-# v3.0.1
+# v3.0.2
 # Created by Menahi Shayan. 2019.
 # https://github.com/menahishayan/HomeScript
 
@@ -29,7 +29,7 @@ def getAccessories():
     try:
         getAcc = requests.get(url + 'accessories', headers=headers)
         for item in getAcc.json()['accessories']:
-            accessories.update({str(item['services'][1]['characteristics'][0]['value']) : {'aid':item['aid'],'iid':item['services'][1]['characteristics'][1]['iid'],'type':item['services'][0]['characteristics'][2]['value'],'value':item['services'][1]['characteristics'][1]['value']}})
+            accessories.update({str(item['services'][1]['characteristics'][0]['value'] or item['services'][0]['characteristics'][2]['value']) : {'aid':item['aid'],'iid':item['services'][1]['characteristics'][1]['iid'],'type':item['services'][0]['characteristics'][2]['value'],'value':item['services'][1]['characteristics'][1]['value']}})
     except:
         # print(sys.exc_info()[0])
         if sys.argv[1] == 'debug':
