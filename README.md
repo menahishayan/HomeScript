@@ -21,6 +21,10 @@ You can set multiple accessories (of the same type) in a single command:
 `homeScript.py all lights 1`  
 `homeScript.py all switches 0`  
 
+## Automations
+HomeScript allows you to create automations **without** a Home Hub!  
+Read: [AUTOMATION.md](AUTOMATION.md)
+
 ## Dependencies
  - Python requests library
  - Python JSON library
@@ -35,38 +39,41 @@ You can set multiple accessories (of the same type) in a single command:
     - Restart your homebridge for the changes to take effect: `sudo systemctl restart homebridge.service` or the equivalent command on your device.
     
 ## Usage
-`homeScript.py [option] [argument]`
+Usage: `homeScript.py [option] [value]`
 ### Options:
- - list : lists all available HomeKit accessories
-   - Usage: `homeScript.py list [argument]`
-   - Arguments:
-     - \<none\> : lists accessory names
-     - aid : lists accessory names with AID value
-     - iid : lists accessory names with IID value
-     - id : lists accessory names with AID and IID
-     - type : lists accessory names with type [Lightbulb, Switch, Fan, etc.]
-     - value : lists accessory names current state
-     - all : lists all of the above
-     - json: prints all attributes in JSON string format
- - \<accessory-name\> : [EasyMatch Supported] toggles the accessory On or Off, or sets to value
-   - Usage: `homeScript.py <accessory-name> [value]`
-   - Values:
-     - \<none\> : toggles the state
-     - 0 : sets to OFF
-     - 1 : sets to ON
- - all : sets value of multiple HomeKit accessories
-   - Usage: `homeScript.py all <accessory-type> value`
-   - \<accessory-type\> : [EasyMatch Supported] sets all \<accessory-type\> to \<value\>
- - help : prints usage info
- - debug : generates debug log file.
-   - Usage: `homeScript.py debug <command>`
-   - Eg: `homeScript.py debug all lights 0`
+ - -l, --list    : Lists all available HomeKit accessories
+  - Usage: `homeScript.py -l [argument]`
+  - Arguments:
+    - <none> : lists accessory names
+    - aid : lists accessory names with AID value
+    - iid : lists accessory names with IID value
+    - id : lists accessory names with AID and IID
+    - type : lists accessory names with type
+    - value : lists accessory names current state
+ - -g, --get     :  [EasyMatch] gets current value of accessory
+   - Usage: `homeScript.py -g <accessory-name>`
+ - -s, --set     :  [EasyMatch] toggles the accessory On or Off, or sets to value
+   - Usage: `homeScript.py -s <accessory-name> [value]`
+ - all     :  Gets or sets value of multiple HomeKit accessories
+   - Usage: `homeScript.py -g all <accessory-type>`
+homeScript.py -s all <accessory-type> value
+ - -d, --debug   : generates debug log file.
+   - Usage: `homeScript.py -d <command>`
+   - Eg: `homeScript.py -d -s all lights 0`
+ - -h, --help    : prints usage info
+ - -v, --version : prints HomeScript version
+
+
+Eg: ````homeScript.py -s MainLight
+homeScript.py -s bedlight 0
+homeScript.py -g all lights
+homeScript.py -s all switches 1````
 
 ## Troubleshooting/Error Reporting/Contributing
 The `debug` option helps generate a logfile for troubleshooting and error detection.  
  - If you face an error, open a new issue on this repo prefixed by [Error] describing the error and attach your **both** your debug log and your exception log, along with any other outputs you receive.
  - If you would like to help improve the tool or request features, open an issue prefixed by [Feature Request] describing the functionality.
- - You **must** attach your debug log or else your issue will be closed. A simple debug log can be obtained from `homeScript.py debug list`
+ - You **must** attach your debug log or else your issue will be closed. A simple debug log can be obtained from `homeScript.py -d -l`
 
 ## PRs and Commit Template
 PRs and commits that you make to this repo must include the following:  
@@ -79,12 +86,21 @@ PRs and commits that you make to this repo must include the following:
 ## To Do
 ⬜️ Color control for RGB and Hue Lights  
 ⬜️ Control for PositionOpeners, GarageDoorOpener, LockMechanism  
-⬜️ Querying API interface to return status of devices to `stdout`  
-⬜️ Automation creation, viewing and monitoring without Home Hub  
+☑️ Querying API interface to return status of devices to `stdout`  
+☑️ Automation creation, viewing and monitoring without Home Hub  
 
 <hr/>
 
 ## Changelog
+### v4.0
+- Syntax update to be POSIX compliant
+- Get option to return item status
+- Introducing Automation and scripting support
+- Modularity and Third-party HomeScript Apps
+- Version logging
+- Improved Debugging
+Note: Some parts of release withheld until the next minor release
+
 ### v3.0.2
 - Bug fix: HomeBridge was displayed as "0"
 
