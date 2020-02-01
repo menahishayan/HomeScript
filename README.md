@@ -25,6 +25,9 @@ You can set multiple accessories (of the same type) in a single command:
 HomeScript allows you to create automations **without** a Home Hub!  
 Read: [AUTOMATION.md](AUTOMATION.md)
 
+## HS Apps
+Introducing HomeScript Apps! Allows for modularity and extendability using custom third-party apps and scripts. WIP
+
 ## Dependencies
  - Python requests library
  - Python JSON library

@@ -152,11 +152,11 @@ def debugHandler(content='init'):
 
 # Start main
 
-if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
-    logging.basicConfig(filename=exceptionFile,filemode = 'a', level=logging.DEBUG)
-
 if argumentLength==1:
     printHelp()
+
+if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
+    logging.basicConfig(filename=exceptionFile,filemode = 'a', level=logging.DEBUG)
 
 if sys.argv[1] == '-h' or sys.argv[1] == '--help':
     printHelp()
