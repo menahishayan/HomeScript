@@ -1,2 +1,4 @@
 .DS_Store
 HS_DeploymentHandler.sh
+node_modules
+
