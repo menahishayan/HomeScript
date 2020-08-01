@@ -16,13 +16,13 @@ VERSION='5.0'
 # Change the parameters below for your HomeBridge
 hostname = '192.168.0.6'
 port = '35945'
-auth = '031-45-154'
+#auth = '031-45-154'
 
 # End parameters
 
 # Start of definitions
 url = 'http://' + hostname + ':' + str(port) + '/'
-headers = {'Content-Type': 'Application/json','authorization': auth}
+headers = {'Content-Type': 'Application/json'}
 
 accessories={}
 selectedAccessories=[]
@@ -31,31 +31,41 @@ argumentLength = len(sys.argv)
 
 exceptionFile='homescript_exception_' + date.today().strftime("%Y.%m.%d") + '.log'
 
-
 def getAccessories():
 	global getAcc
 	try:
 		getAcc = requests.get(url + 'accessories', headers=headers)
-		for item in getAcc.json()['accessories']:
-			if getAcc.json()['accessories'].index(item) != 0:
-				accessories.update({str(item['services'][0]['characteristics'][3]['value']).replace(' ','_') : {'aid':item['aid'],'iid':10,'type':item['services'][0]['characteristics'][2]['value'],'value':item['services'][1]['characteristics'][1]['value']}})
+		if getAcc.status_code == 200:
+			getAcc = getAcc.json()
+		with open('acc.json') as f:
+		  data = json.load(f)
+		for item in data['accessories']:
+			if data['accessories'].index(item) != 0:
+				interfaces = []
+				for i in item['services'][1]['characteristics'][1:]:
+					if i['format'] not in ['bool','string','tlv8', 'uint8']:
+						interfaces.append({'iid':i['iid'],'description': i['description'],'maxValue': i['maxValue'],'minValue': i['minValue'],'minStep': i['minStep'], 'value': i['value']})
+					else:
+						interfaces.append({'iid':i['iid'],'description': i['description'],'value': i['value']})
+				accessories.update({str(item['services'][0]['characteristics'][3]['value']).replace(' ','_') : {'aid':item['aid'],'iid':10,'type':item['services'][0]['characteristics'][2]['value'],'value':interfaces}})
+
 	except:
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 			logging.error(Exception, exc_info=True)
 		print('Exception logged: ' + exceptionFile)
 	return accessories
-		
+
 def selectAccessory(inputName):
 	try:
 		for key in accessories:
 			if inputName in key.lower():
 				selectedAccessoryNames.update({accessories[key]['aid']:{'name':key}})
-				selectedAccessories.append({'aid':accessories[key]['aid'], 'iid':accessories[key]['iid'], 'value':accessories[key]['value']})
+				selectedAccessories.append({'aid':accessories[key]['aid'], 'value':accessories[key]['value']})
 	except:
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 			logging.error(Exception, exc_info=True)
 			print('Exception logged: ' + exceptionFile)
-	
+
 def selectGroup(inputName):
 	try:
 		for key in accessories:
@@ -66,7 +76,7 @@ def selectGroup(inputName):
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 			logging.error(Exception, exc_info=True)
 			print('Exception logged: ' + exceptionFile)
-	
+
 def printAccessories(param=''):
 	try:
 		if param == 'json':
@@ -75,23 +85,24 @@ def printAccessories(param=''):
 		for key in accessories:
 			if param == 'aid':
 				print(str(accessories[key]['aid']) + ' ', end='')
-			if param == 'iid':
-				print(str(accessories[key]['iid']) + ' ', end='')
-			if param == 'id' or param == 'all':
-				print(str(accessories[key]['aid']) + '.' + str(accessories[key]['iid']) + ' ', end='')
 			print(key, end=' ')
 			if param == 'type' or param == 'all':
 				print(str(accessories[key]['type']) + ' ', end='')
 			if param == 'value' or param == 'all':
-				print(str(accessories[key]['value']), end='')
+				# print(str(accessories[key]['value']), end='')
+				for i in accessories[key]['value']:
+					print('\n   ', end='')
+					if param == 'iid' or param == 'all':
+						print(str(i['iid']), end=' ')
+					print(str(i['description']) + ' ' + str(i['value']), end='')
 			print('')
 	except:
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 			# debugHandler(json.dumps(sys.exc_info()))
 			logging.error(Exception, exc_info=True)
 			print('Exception logged: ' + exceptionFile)
-		
-		
+
+
 def printHelp():
 	print('Usage: homeScript.py [option] [value]')
 	print('Options:')
@@ -122,7 +133,7 @@ def printHelp():
 	print('    homeScript.py -s all switches 1')
 	print('\nCreated by Menahi Shayan.\n')
 	sys.exit()
-		
+
 def debugHandler(content='init'):
 	if content=='init':
 		debugFile=open('homescript_debug_' + date.today().strftime("%Y.%m.%d") + '.log', "w")
@@ -132,7 +143,7 @@ def debugHandler(content='init'):
 		debugFile.write('\nHSDB: Selected accessories: ' + json.dumps(selectedAccessories))
 		debugFile.write('\nHSDB: Selected accessory names: ' + json.dumps(selectedAccessoryNames))
 		debugFile.write('\nHSDB: Arguments: ' + json.dumps(sys.argv))
-		debugFile.write('\nHSDB: Get accessories response:\n' + getAcc.text + '\nHSDB: End get accessories response\n')
+		debugFile.write('\nHSDB: Get accessories response:\n' + str(getAcc) + '\nHSDB: End get accessories response\n')
 	elif content=='end':
 		debugFile=open('homescript_debug_' + date.today().strftime("%Y.%m.%d") + '.log', "a")
 		debugFile.write('HSDB: End homeScript debug file')
@@ -142,7 +153,7 @@ def debugHandler(content='init'):
 		debugFile=open('homescript_debug_' + date.today().strftime("%Y.%m.%d") + '.log', "a")
 		debugFile.write('HSDB: ' + str(content) + '\n')
 	debugFile.close()
-		
+
 # End definitions
 
 # Start main
@@ -171,7 +182,7 @@ if sys.argv[1+argumentOffset] == '-l' or sys.argv[1+argumentOffset] == '--list':
 	printAccessories(sys.argv[2+argumentOffset] if argumentLength>(2+argumentOffset) else '')
 	if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 		debugHandler('end')
-		sys.exit()
+	sys.exit()
 elif sys.argv[2+argumentOffset] == 'all':
 	if argumentLength>(3+argumentOffset + (1 if sys.argv[1+argumentOffset] == '-s' or sys.argv[1+argumentOffset] == '--set' else 0)):
 		selectGroup(sys.argv[3+argumentOffset].lower())
@@ -195,14 +206,15 @@ else:
 			else:
 				item['value'] = '0'
 				selectedAccessoryNames[item['aid']].update({'value': item['value']})
-		
-		setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + json.dumps(selectedAccessories) + '}')
+
 		print('{"characteristics":' + json.dumps(selectedAccessories) + '}')
+		setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + json.dumps(selectedAccessories) + '}')
+
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 			debugHandler()
 			debugHandler('Set characteristics response:\n'+setReq.text)
 			debugHandler('End set characteristics response')
-		
+
 		try:
 			if setReq.status_code != 204:
 				for item in setReq.json()['characteristics']:
@@ -213,14 +225,14 @@ else:
 				# debugHandler(json.dumps(sys.exc_info()))
 				logging.error(Exception, exc_info=True)
 				print('Exception logged: ' + exceptionFile)
-			
+
 	elif sys.argv[1+argumentOffset] == '-g' or sys.argv[1+argumentOffset] == '--get':
 		for item in selectedAccessories:
 			print(selectedAccessoryNames[item['aid']]['name'] + ' ' + str(item['value']))
-		
+
 	else:
 		printHelp()
-			
+
 if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 	debugHandler('end')
 
