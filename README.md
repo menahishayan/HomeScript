@@ -75,11 +75,6 @@ homeScript.py -s all <accessory-type> value
  - -v, --version : prints HomeScript version
 
 
-Eg: ````homeScript.py -s MainLight  
-homeScript.py -s bedlight 0  
-homeScript.py -g all lights  
-homeScript.py -s all switches 1````
-
 ## Troubleshooting/Error Reporting/Contributing
 The `debug` option helps generate a logfile for troubleshooting and error detection.  
  - If you face an error, open a new issue on this repo prefixed by [Error] describing the error and attach your **both** your debug log and your exception log, along with any other outputs you receive.
