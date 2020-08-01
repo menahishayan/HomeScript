@@ -10,6 +10,7 @@ import sys
 import json
 import logging
 from datetime import date
+# to add webcolors
 
 VERSION='5.0'
 
@@ -37,10 +38,10 @@ def getAccessories():
 		getAcc = requests.get(url + 'accessories', headers=headers)
 		if getAcc.status_code == 200:
 			getAcc = getAcc.json()
-		# with open('acc.json') as f:
-		#   data = json.load(f)
-		for item in getAcc['accessories']:
-			if getAcc['accessories'].index(item) != 0:
+		with open('acc.json') as f:
+		  data = json.load(f)
+		for item in data['accessories']:
+			if data['accessories'].index(item) != 0:
 				interfaces = []
 				for i in item['services'][1]['characteristics'][1:]:
 					if i['format'] not in ['bool','string','tlv8', 'uint8']:
@@ -200,18 +201,38 @@ if len(selectedAccessories) == 0:
 else:
 	if sys.argv[1+argumentOffset] == '-s' or sys.argv[1+argumentOffset] == '--set':
 		setData = []
+		valueIndex = 0
 
 		for item in selectedAccessories:
-			if (argumentOffset+argumentLength) == (4+argumentOffset):
-				item['value'][0]['value'] = sys.argv[argumentLength-1]
-			elif item['value'][0]['value'] == 0 or item['value'][0]['value'] == False:
-				item['value'][0]['value'] = '1'
+			if sys.argv[argumentLength-2] not in ['-b', '-h', '-sat', '-t', '--brightness', '--hue', '--saturation', '--temperature'] and sys.argv[argumentLength-1] not in ['-b', '-h', '-sat', '-t', '--brightness', '--hue', '--saturation', '--temperature']:
+				if sys.argv[argumentLength-1].isdigit():
+					item['value'][0]['value'] = sys.argv[argumentLength-1]
+				elif item['value'][0]['value'] == 0 or item['value'][0]['value'] == False:
+					item['value'][0]['value'] = '1'
+				else:
+					item['value'][0]['value'] = '0'
 			else:
-				item['value'][0]['value'] = '0'
-			selectedAccessoryNames[item['aid']].update({'iid': item['value'][0]['iid'], 'value': item['value'][0]['value']})
-			setData.append({'aid': item['aid'],'iid': item['value'][0]['iid'], 'value': item['value'][0]['value']})
+
+				if sys.argv[argumentLength-2] in ['-b', '--brightness'] or sys.argv[argumentLength-1] in ['-b', '--brightness']:
+					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Brightness'), 0)
+				elif sys.argv[argumentLength-2] in ['-h', '--hue'] or sys.argv[argumentLength-1] in ['-h', '--hue']:
+					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Hue'), 0)
+				elif sys.argv[argumentLength-2] in ['-sat', '--saturation'] or sys.argv[argumentLength-1] in ['-sat', '--saturation']:
+					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Saturation'), 0)
+				elif sys.argv[argumentLength-2] in ['-t', '--temperature'] or sys.argv[argumentLength-1] in ['-t', '--temperature']:
+					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Color Temperature'), 0)
+
+				if sys.argv[argumentLength-1].isdigit():
+					item['value'][valueIndex]['value'] = int(sys.argv[argumentLength-1])
+				elif item['value'][valueIndex]['value'] >= ((item['value'][valueIndex]['maxValue']-item['value'][valueIndex]['minValue'])/2) - (((item['value'][valueIndex]['maxValue']-item['value'][valueIndex]['minValue'])/2)%item['value'][valueIndex]['minStep']):
+					item['value'][valueIndex]['value'] = item['value'][valueIndex]['maxValue']
+				else:
+					item['value'][valueIndex]['value'] = item['value'][valueIndex]['minValue']
+
+			selectedAccessoryNames[item['aid']].update({'iid': item['value'][valueIndex]['iid'], 'value': item['value'][valueIndex]['value']})
+			setData.append({'aid': item['aid'],'iid': item['value'][valueIndex]['iid'], 'value': item['value'][valueIndex]['value']})
 		print('{"characteristics":' + str(setData).replace('\'','\"') + '}')
-		setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + str(setData).replace('\'','\"') + '}')
+		# setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + str(setData).replace('\'','\"') + '}')
 
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 			debugHandler()
