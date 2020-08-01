@@ -9,7 +9,7 @@ Used to toggle Homebridge accessories On or Off via python script, no Home app r
 `homeScript.py -s MainLight 0`  | Switch off  
 `homeScript.py -s MainLight 1`  | Switch on  
 `homeScript.py -s MainLight`   | Toggle  
-`homeScript.py -s lifx --hue 140` | RGB Lights Support
+`homeScript.py -s lifx --hue 140` | RGB Lights Support  
 `homeScript.py -s lifx --saturation` | Toggle even works on integer values
 
 ## Easy Match
