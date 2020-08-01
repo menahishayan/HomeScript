@@ -6,22 +6,24 @@ Used to toggle Homebridge accessories On or Off via python script, no Home app r
 **Note:** as of HomeScript 4.1 the minimum requirement is Python3+ and HomeBridge 1.x.x+
 
 ## Examples
-`homeScript.py MainLight 0`  | Switch off  
-`homeScript.py MainLight 1`  | Switch on  
-`homeScript.py MainLight`   | Toggle
+`homeScript.py -s MainLight 0`  | Switch off  
+`homeScript.py -s MainLight 1`  | Switch on  
+`homeScript.py -s MainLight`   | Toggle
+`homeScript.py -s lifx --hue 140` | RGB Lights Support
+`homeScript.py -s lifx --saturation` | Toggle even works on integer values
 
 ## Easy Match
 The script doesn't require full names of the accessories.  
 
 **For example**, if your light is called "MainLight", you can run:  
-`homeScript.py MainLight 0` or  
-`homeScript.py main 0`  
+`homeScript.py -s MainLight 0` or  
+`homeScript.py -s main 0`  
 The script will automatically search for matching substrings and set the accessory value
 
 ## Group Actions
 You can set multiple accessories (of the same type) in a single command:  
-`homeScript.py all lights 1`  
-`homeScript.py all switches 0`  
+`homeScript.py -s all lights 1`  
+`homeScript.py -s all switches 0`  
 
 ## Automations
 HomeScript allows you to create automations **without** a Home Hub!  
@@ -75,11 +77,8 @@ homeScript.py -s all <accessory-type> value
 
 Eg: ````homeScript.py -s MainLight
 homeScript.py -s bedlight 0
-homeScript.py -g all lights //toggles current state of each light
-homeScript.py -s all switches 1
-homeScript.py -s lifx --hue 140
-homeScript.py -s lifx --saturation //inverts saturation value
-````
+homeScript.py -g all lights
+homeScript.py -s all switches 1````
 
 ## Troubleshooting/Error Reporting/Contributing
 The `debug` option helps generate a logfile for troubleshooting and error detection.  
