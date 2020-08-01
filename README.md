@@ -33,13 +33,13 @@ Introducing HomeScript Apps! Allows for modularity and extendability using custo
 ## Dependencies
  - Python requests library
  - Python JSON library
- 
+
  ## Installation
   - Install the requests library `pip install requests` or `pip3 install requests`
-  - On your client computer: Move **homeScript.py** to a convenient location 
+  - On your client computer: Move **homeScript.py** to a convenient location
     - Edit the script to include your homebridge URL, port and authorization key
     - Change permissions `chmod +x /path/to/homeScript.py` (on linux)
-    
+
 ## Usage
 Usage: `homeScript.py [option] [value]`
 ### Options:
@@ -54,8 +54,15 @@ Usage: `homeScript.py [option] [value]`
     - value : lists accessory names current state
  - -g, --get     :  [EasyMatch] gets current value of accessory
    - Usage: `homeScript.py -g <accessory-name>`
- - -s, --set     :  [EasyMatch] toggles the accessory On or Off, or sets to value
+ - -s, --set     :  [EasyMatch] toggles the accessory On or Off, or sets to the specified value
    - Usage: `homeScript.py -s <accessory-name> [value]`
+   - Arguments:
+     - <accessory-name> : accessory that you want to change
+     - -b, --brightness : adjusts accessory brightness
+     - -h, --hue : adjusts accessory hue
+     - -sat, --saturation : adjusts accessory saturation
+     - -t, --temperature : adjusts accessory color temperature
+     - [value] : value that you want to set it to
  - all     :  Gets or sets value of multiple HomeKit accessories
    - Usage: `homeScript.py -g all <accessory-type>`
 homeScript.py -s all <accessory-type> value
@@ -68,8 +75,11 @@ homeScript.py -s all <accessory-type> value
 
 Eg: ````homeScript.py -s MainLight
 homeScript.py -s bedlight 0
-homeScript.py -g all lights
-homeScript.py -s all switches 1````
+homeScript.py -g all lights //toggles current state of each light
+homeScript.py -s all switches 1
+homeScript.py -s lifx --hue 140
+homeScript.py -s lifx --saturation //inverts saturation value
+````
 
 ## Troubleshooting/Error Reporting/Contributing
 The `debug` option helps generate a logfile for troubleshooting and error detection.  
@@ -86,7 +96,7 @@ PRs and commits that you make to this repo must include the following:
 <hr/>
 
 ## To Do
-⬜️ Color control for RGB and Hue Lights  
+☑️ Color control for RGB and Hue Lights  
 ⬜️ Control for PositionOpeners, GarageDoorOpener, LockMechanism  
 ☑️ Querying API interface to return status of devices to `stdout`  
 ☑️ Automation creation, viewing and monitoring without Home Hub  
@@ -94,6 +104,20 @@ PRs and commits that you make to this repo must include the following:
 <hr/>
 
 ## Changelog
+### v5.0
+- Support for RGB lights! Now lets you control brightness, hue, saturation and color temperature of your lights!
+- Added additional value format recognition
+- Device type detection
+- Updated accessory structure
+- Added smart toggle support for integer values
+- Added validity checks for integer values
+- Ignore bridge in accessory list
+- Updated listing format
+- Finer control over listing parameters for devices with multiple interfaces
+- Updated exclusive value-only listing for easier interfacing in programs
+- Cleaned up accessory name recognition
+- Backward compatibility with v4.x syntax for all devices
+
 ### v4.1
 - Update to python 3
 - Update to support HomeBridge v1.0+
@@ -140,4 +164,3 @@ Note: Some parts of release withheld until the next minor release
 - Initial release
 
 <hr/>
-
