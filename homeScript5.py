@@ -38,10 +38,10 @@ def getAccessories():
 		getAcc = requests.get(url + 'accessories', headers=headers)
 		if getAcc.status_code == 200:
 			getAcc = getAcc.json()
-		with open('acc.json') as f:
-		  data = json.load(f)
-		for item in data['accessories']:
-			if data['accessories'].index(item) != 0:
+		# with open('acc.json') as f:
+		#   data = json.load(f)
+		for item in getAcc['accessories']:
+			if getAcc['accessories'].index(item) != 0:
 				interfaces = []
 				for i in item['services'][1]['characteristics'][1:]:
 					if i['format'] not in ['bool','string','tlv8', 'uint8']:
@@ -232,7 +232,7 @@ else:
 			selectedAccessoryNames[item['aid']].update({'iid': item['value'][valueIndex]['iid'], 'value': item['value'][valueIndex]['value']})
 			setData.append({'aid': item['aid'],'iid': item['value'][valueIndex]['iid'], 'value': item['value'][valueIndex]['value']})
 		print('{"characteristics":' + str(setData).replace('\'','\"') + '}')
-		# setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + str(setData).replace('\'','\"') + '}')
+		setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + str(setData).replace('\'','\"') + '}')
 
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 			debugHandler()
