@@ -8,7 +8,7 @@ Used to toggle Homebridge accessories On or Off via python script, no Home app r
 ## Examples
 `homeScript.py -s MainLight 0`  | Switch off  
 `homeScript.py -s MainLight 1`  | Switch on  
-`homeScript.py -s MainLight`   | Toggle
+`homeScript.py -s MainLight`   | Toggle  
 `homeScript.py -s lifx --hue 140` | RGB Lights Support
 `homeScript.py -s lifx --saturation` | Toggle even works on integer values
 
@@ -75,9 +75,9 @@ homeScript.py -s all <accessory-type> value
  - -v, --version : prints HomeScript version
 
 
-Eg: ````homeScript.py -s MainLight
-homeScript.py -s bedlight 0
-homeScript.py -g all lights
+Eg: ````homeScript.py -s MainLight  
+homeScript.py -s bedlight 0  
+homeScript.py -g all lights  
 homeScript.py -s all switches 1````
 
 ## Troubleshooting/Error Reporting/Contributing
