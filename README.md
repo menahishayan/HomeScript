@@ -3,6 +3,8 @@ Python script for command line control of [HomeBridge](https://github.com/nfarin
 
 Used to toggle Homebridge accessories On or Off via python script, no Home app required. You can set up a cronjob to enable automation, scripting and mimic other HomeKit functionalities
 
+**Note:** as of HomeScript 4.1 the minimum requirement is Python3+ and HomeBridge 1.x.x+
+
 ## Examples
 `homeScript.py MainLight 0`  | Switch off  
 `homeScript.py MainLight 1`  | Switch on  
@@ -37,9 +39,6 @@ Introducing HomeScript Apps! Allows for modularity and extendability using custo
   - On your client computer: Move **homeScript.py** to a convenient location 
     - Edit the script to include your homebridge URL, port and authorization key
     - Change permissions `chmod +x /path/to/homeScript.py` (on linux)
-  - On your HomeBridge: edit your **/etc/default/homebridge** to run in insecure mode every time it starts. 
-    - `HOMEBRIDGE_OPTS=-I -U /var/lib/homebridge`
-    - Restart your homebridge for the changes to take effect: `sudo systemctl restart homebridge.service` or the equivalent command on your device.
     
 ## Usage
 Usage: `homeScript.py [option] [value]`
@@ -95,6 +94,10 @@ PRs and commits that you make to this repo must include the following:
 <hr/>
 
 ## Changelog
+### v4.1
+- Update to python 3
+- Update to support HomeBridge v1.0+
+
 ### v4.0
 - Syntax update to be POSIX compliant
 - Get option to return item status

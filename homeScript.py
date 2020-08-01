@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python3
 
 # HomeScript - Python script to control homebridge devices using the command line
 # v4.0
@@ -14,7 +14,7 @@ from datetime import date
 VERSION='4.0'
 
 # Change the parameters below for your HomeBridge
-hostname = 'home.local'
+hostname = '192.168.0.6'
 port = '35945'
 auth = '031-45-154'
 
@@ -22,7 +22,7 @@ auth = '031-45-154'
 
 # Start of definitions
 url = 'http://' + hostname + ':' + str(port) + '/'
-headers = {'Content-Type': 'Application/json','authorization': auth,}
+headers = {'Content-Type': 'Application/json','authorization': auth}
 
 accessories={}
 selectedAccessories=[]
@@ -37,13 +37,14 @@ def getAccessories():
     try:
         getAcc = requests.get(url + 'accessories', headers=headers)
         for item in getAcc.json()['accessories']:
-            accessories.update({str(item['services'][1]['characteristics'][0]['value'] or item['services'][0]['characteristics'][2]['value']).replace(' ','_') : {'aid':item['aid'],'iid':item['services'][1]['characteristics'][1]['iid'],'type':item['services'][0]['characteristics'][2]['value'],'value':item['services'][1]['characteristics'][1]['value']}})
+            if getAcc.json()['accessories'].index(item) != 0:
+	            accessories.update({str(item['services'][0]['characteristics'][3]['value']).replace(' ','_') : {'aid':item['aid'],'iid':10,'type':item['services'][0]['characteristics'][2]['value'],'value':item['services'][1]['characteristics'][1]['value']}})
     except:
         # print(sys.exc_info()[0])
         if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
             # debugHandler(str(sys.exc_info()[0]))
             logging.error(Exception, exc_info=True)
-            print 'Exception logged: ' + exceptionFile
+            print('Exception logged: ' + exceptionFile)
     return accessories
 
 def selectAccessory(inputName):
@@ -56,7 +57,7 @@ def selectAccessory(inputName):
         if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
             # debugHandler(json.dumps(sys.exc_info()))
             logging.error(Exception, exc_info=True)
-            print 'Exception logged: ' + exceptionFile
+            print('Exception logged: ' + exceptionFile)
 
 def selectGroup(inputName):
     try:
@@ -68,62 +69,62 @@ def selectGroup(inputName):
         if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
             # debugHandler(json.dumps(sys.exc_info()))
             logging.error(Exception, exc_info=True)
-            print 'Exception logged: ' + exceptionFile
+            print('Exception logged: ' + exceptionFile)
 
 def printAccessories(param=''):
     try:
         if param == 'json':
-            print json.dumps(accessories)
+            print(json.dumps(accessories))
             return
         for key in accessories:
             if param == 'aid':
-                print str(accessories[key]['aid']) + ' ',
+                print(str(accessories[key]['aid']) + ' ', end='')
             if param == 'iid':
-                print str(accessories[key]['iid']) + ' ',
+                print(str(accessories[key]['iid']) + ' ', end='')
             if param == 'id' or param == 'all':
-                print str(accessories[key]['aid']) + '.' + str(accessories[key]['iid']) + ' ',
-            print key,
+                print(str(accessories[key]['aid']) + '.' + str(accessories[key]['iid']) + ' ', end='')
+            print(key, end=' ')
             if param == 'type' or param == 'all':
-                print str(accessories[key]['type']) + ' ',
+                print(str(accessories[key]['type']) + ' ', end='')
             if param == 'value' or param == 'all':
-                print str(accessories[key]['value']),
-            print ''
+                print(str(accessories[key]['value']), end='')
+            print('')
     except:
         if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
             # debugHandler(json.dumps(sys.exc_info()))
             logging.error(Exception, exc_info=True)
-            print 'Exception logged: ' + exceptionFile
+            print('Exception logged: ' + exceptionFile)
 
 
 def printHelp():
-    print 'Usage: homeScript.py [option] [value]'
-    print 'Options:'
-    print '  -l, --list    : Lists all available HomeKit accessories'
-    print '                     Usage: homeScript.py -l [argument]'
-    print '                     Arguments:'
-    print '                         <none> : lists accessory names'
-    print '                         aid : lists accessory names with AID value'
-    print '                         iid : lists accessory names with IID value'
-    print '                         id : lists accessory names with AID and IID'
-    print '                         type : lists accessory names with type'
-    print '                         value : lists accessory names current state\n'
-    print '  -g, --get     :  [EasyMatch] gets current value of accessory'
-    print '                     Usage: homeScript.py -g <accessory-name>\n'
-    print '  -s, --set     :  [EasyMatch] toggles the accessory On or Off, or sets to value'
-    print '                     Usage: homeScript.py -s <accessory-name> [value]\n'
-    print '        all     :  Gets or sets value of multiple HomeKit accessories'
-    print '                     Usage: homeScript.py -g all <accessory-type>'
-    print '                            homeScript.py -s all <accessory-type> value\n'
-    print '  -d, --debug   : generates debug log file.'
-    print '                     Usage: homeScript.py -d <command>'
-    print '                     Eg: homeScript.py -d -s all lights 0\n'
-    print '  -h, --help    : prints usage info\n'
-    print '  -v, --version : prints HomeScript version\n'
-    print '\nEg: homeScript.py -s MainLight'
-    print '    homeScript.py -s bedlight 0'
-    print '    homeScript.py -g all lights'
-    print '    homeScript.py -s all switches 1'
-    print '\nCreated by Menahi Shayan.\n'
+    print('Usage: homeScript.py [option] [value]')
+    print('Options:')
+    print('  -l, --list    : Lists all available HomeKit accessories')
+    print('                     Usage: homeScript.py -l [argument]')
+    print('                     Arguments:')
+    print('                         <none> : lists accessory names')
+    print('                         aid : lists accessory names with AID value')
+    print('                         iid : lists accessory names with IID value')
+    print('                         id : lists accessory names with AID and IID')
+    print('                         type : lists accessory names with type')
+    print('                         value : lists accessory names current state\n')
+    print('  -g, --get     :  [EasyMatch] gets current value of accessory')
+    print('                     Usage: homeScript.py -g <accessory-name>\n')
+    print('  -s, --set     :  [EasyMatch] toggles the accessory On or Off, or sets to value')
+    print('                     Usage: homeScript.py -s <accessory-name> [value]\n')
+    print('        all     :  Gets or sets value of multiple HomeKit accessories')
+    print('                     Usage: homeScript.py -g all <accessory-type>')
+    print('                            homeScript.py -s all <accessory-type> value\n')
+    print('  -d, --debug   : generates debug log file.')
+    print('                     Usage: homeScript.py -d <command>')
+    print('                     Eg: homeScript.py -d -s all lights 0\n')
+    print('  -h, --help    : prints usage info\n')
+    print('  -v, --version : prints HomeScript version\n')
+    print('\nEg: homeScript.py -s MainLight')
+    print('    homeScript.py -s bedlight 0')
+    print('    homeScript.py -g all lights')
+    print('    homeScript.py -s all switches 1')
+    print('\nCreated by Menahi Shayan.\n')
     sys.exit()
 
 def debugHandler(content='init'):
@@ -141,7 +142,7 @@ def debugHandler(content='init'):
         debugFile=open('homescript_debug_' + date.today().strftime("%Y.%m.%d") + '.log', "a")
         debugFile.write('HSDB: End homeScript debug file')
         debugFile.close()
-        print 'Debug logged: homescript_debug_' + date.today().strftime("%Y.%m.%d") + '.log'
+        print('Debug logged: homescript_debug_' + date.today().strftime("%Y.%m.%d") + '.log')
         sys.exit()
     else:
         debugFile=open('homescript_debug_' + date.today().strftime("%Y.%m.%d") + '.log', "a")
@@ -162,7 +163,7 @@ if sys.argv[1] == '-h' or sys.argv[1] == '--help':
     printHelp()
 
 if sys.argv[1] == '-v' or sys.argv[1] == '--version':
-    print VERSION
+    print(VERSION)
     sys.exit()
 
 getAccessories()
@@ -186,9 +187,9 @@ else:
     selectAccessory(sys.argv[2+argumentOffset].lower())
 
 if len(selectedAccessories) == 0:
-    print 'Accessory/Group not found.\nHere are a list of accessories:\n'
+    print('Accessory/Group not found.\nHere are a list of accessories:\n')
     printAccessories('type')
-    print '\nFor usage info type \'homeScript.py -h\''
+    print('\nFor usage info type \'homeScript.py -h\'')
     sys.exit(-1)
 else:
     if sys.argv[1+argumentOffset] == '-s' or sys.argv[1+argumentOffset] == '--set':
@@ -217,17 +218,17 @@ else:
                     #            print 'Error: ' + item['status']
                     #            sys.exit(item['status'])
                     if item['status'] != 0:
-                        print selectedAccessoryNames[item['aid']]['name'] + ' Error: ' + item['status']
+                        print(selectedAccessoryNames[item['aid']]['name'] + ' Error: ' + str(item['status']))
                         sys.exit(item['status'])
             except:
                 if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
                     # debugHandler(json.dumps(sys.exc_info()))
                     logging.error(Exception, exc_info=True)
-                    print 'Exception logged: ' + exceptionFile
+                    print('Exception logged: ' + exceptionFile)
 
     elif sys.argv[1+argumentOffset] == '-g' or sys.argv[1+argumentOffset] == '--get':
         for item in selectedAccessories:
-            print selectedAccessoryNames[item['aid']]['name'] + ' ' + str(item['value'])
+            print(selectedAccessoryNames[item['aid']]['name'] + ' ' + str(item['value']))
 
     else:
         printHelp()
