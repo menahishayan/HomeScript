@@ -88,13 +88,14 @@ def printAccessories(param=''):
 			print(key, end=' ')
 			if param == 'type' or param == 'all':
 				print(str(accessories[key]['type']) + ' ', end='')
-			if param == 'value' or param == 'all':
+			if param in ['value','iid','all']:
 				# print(str(accessories[key]['value']), end='')
 				for i in accessories[key]['value']:
 					print('\n   ', end='')
 					if param == 'iid' or param == 'all':
-						print(str(i['iid']), end=' ')
-					print(str(i['description']) + ' ' + str(i['value']), end='')
+						print(str(i['iid']) + ' ' + str(i['value']), end=' ')
+					if param == 'value' or param == 'all':
+						print(str(i['description']) + ' ' + str(i['value']), end='')
 			print('')
 	except:
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
