@@ -16,13 +16,13 @@ VERSION='5.0'
 # Change the parameters below for your HomeBridge
 hostname = '192.168.0.6'
 port = '35945'
-#auth = '031-45-154'
+auth = '031-45-154'
 
 # End parameters
 
 # Start of definitions
 url = 'http://' + hostname + ':' + str(port) + '/'
-headers = {'Content-Type': 'Application/json'}
+headers = {'Content-Type': 'Application/json', 'authorization': auth}
 
 accessories={}
 selectedAccessories=[]
@@ -37,10 +37,10 @@ def getAccessories():
 		getAcc = requests.get(url + 'accessories', headers=headers)
 		if getAcc.status_code == 200:
 			getAcc = getAcc.json()
-		with open('acc.json') as f:
-		  data = json.load(f)
-		for item in data['accessories']:
-			if data['accessories'].index(item) != 0:
+		# with open('acc.json') as f:
+		#   data = json.load(f)
+		for item in getAcc['accessories']:
+			if getAcc['accessories'].index(item) != 0:
 				interfaces = []
 				for i in item['services'][1]['characteristics'][1:]:
 					if i['format'] not in ['bool','string','tlv8', 'uint8']:
@@ -199,17 +199,19 @@ if len(selectedAccessories) == 0:
 	sys.exit(-1)
 else:
 	if sys.argv[1+argumentOffset] == '-s' or sys.argv[1+argumentOffset] == '--set':
-		for item in selectedAccessories:
-			if argumentLength>(3+argumentOffset):
-				item['value'] = sys.argv[argumentLength-1]
-			elif item['value'] == 0 or item['value'] == False:
-				item['value'] = '1'
-			else:
-				item['value'] = '0'
-				selectedAccessoryNames[item['aid']].update({'value': item['value']})
+		setData = []
 
-		print('{"characteristics":' + json.dumps(selectedAccessories) + '}')
-		setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + json.dumps(selectedAccessories) + '}')
+		for item in selectedAccessories:
+			if (argumentOffset+argumentLength) == (4+argumentOffset):
+				item['value'][0]['value'] = sys.argv[argumentLength-1]
+			elif item['value'][0]['value'] == 0 or item['value'][0]['value'] == False:
+				item['value'][0]['value'] = '1'
+			else:
+				item['value'][0]['value'] = '0'
+			selectedAccessoryNames[item['aid']].update({'iid': item['value'][0]['iid'], 'value': item['value'][0]['value']})
+			setData.append({'aid': item['aid'],'iid': item['value'][0]['iid'], 'value': item['value'][0]['value']})
+		print('{"characteristics":' + str(setData).replace('\'','\"') + '}')
+		setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + str(setData).replace('\'','\"') + '}')
 
 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
 			debugHandler()
@@ -218,6 +220,7 @@ else:
 
 		try:
 			if setReq.status_code != 204:
+				print(setReq)
 				for item in setReq.json()['characteristics']:
 					print(selectedAccessoryNames[item['aid']]['name'] + ' Error: ' + str(item['status']))
 					sys.exit(item['status'])

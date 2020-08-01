@@ -202,6 +202,7 @@ else:
                 item['value'] = '0'
             selectedAccessoryNames[item['aid']].update({'value': item['value']})
 
+            print('{"characteristics":' + json.dumps(selectedAccessories) + '}')
             setReq = requests.put(url + 'characteristics', headers=headers, data='{"characteristics":' + json.dumps(selectedAccessories) + '}')
 
             if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
