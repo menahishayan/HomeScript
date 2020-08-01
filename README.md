@@ -48,7 +48,7 @@ Usage: `homeScript.py [option] [value]`
  - -l, --list    : Lists all available HomeKit accessories
   - Usage: `homeScript.py -l [argument]`
   - Arguments:
-    - <none> : lists accessory names
+    - \<none\> : lists accessory names
     - aid : lists accessory names with AID value
     - iid : lists accessory names with IID value
     - id : lists accessory names with AID and IID
@@ -59,7 +59,7 @@ Usage: `homeScript.py [option] [value]`
  - -s, --set     :  [EasyMatch] toggles the accessory On or Off, or sets to the specified value
    - Usage: `homeScript.py -s <accessory-name> [value]`
    - Arguments:
-     - <accessory-name> : accessory that you want to change
+     - \<accessory-name\> : accessory that you want to change
      - -b, --brightness : adjusts accessory brightness
      - -h, --hue : adjusts accessory hue
      - -sat, --saturation : adjusts accessory saturation
