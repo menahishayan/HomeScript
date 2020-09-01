@@ -32,6 +32,8 @@ Read: [AUTOMATION.md](AUTOMATION.md)
 ## HS Apps
 Introducing HomeScript Apps! Allows for modularity and extendability using custom third-party apps and scripts. WIP
 
+**Looking for maintainers: This repo is no longer being maintained and future updates to this project may not be guaranteed. If you are interested in maintaining this project, feel free to reach out.** 
+
 ## Dependencies
  - Python requests library
  - Python JSON library
