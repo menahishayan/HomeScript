@@ -45,7 +45,7 @@ def getAccessories():
 			if getAcc['accessories'].index(item) != 0:
 				interfaces = []
 				for i in item['services'][1]['characteristics'][1:]:
-					if i['format'] not in ['bool','string','tlv8', 'uint8']:
+					if i['format'] not in ['bool','string','tlv8','uint8','float']:
 						interfaces.append({'iid':i['iid'],'description': i['description'],'maxValue': i['maxValue'],'minValue': i['minValue'],'minStep': i['minStep'], 'value': i['value']})
 					else:
 						interfaces.append({'iid':i['iid'],'description': i['description'],'value': i['value']})
