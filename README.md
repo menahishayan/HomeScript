@@ -1,5 +1,6 @@
 # HomeScript
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/menahishayan)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/menahishayan)  
+
 Python script for command line control of [HomeBridge](https://github.com/nfarina/homebridge) (HomeKit)
 
 Used to toggle Homebridge accessories On or Off via python script, no Home app required. You can set up a cronjob to enable automation, scripting and mimic other HomeKit functionalities
