@@ -5,3 +5,6 @@ homescript_exception*
 homescript_debug*
 acc*
 debug*
+hs_test_venv/bin
+hs_test_venv/include
+hs_test_venv/lib

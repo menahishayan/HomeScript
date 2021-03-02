@@ -40,7 +40,30 @@ Introducing HomeScript Apps! Allows for modularity and extendability using custo
  - Python requests library
  - Python JSON library
 
- ## Installation
+## Setup
+  Important: HomeBridge **must** be run in insecure mode for this script to work!
+
+### Running HomeBridge in Insecure Mode
+#### via Command Line
+Add the `-I` flag:
+
+```
+homebridge -I
+```
+
+#### via Systemd
+
+```
+HOMEBRIDGE_OPTS=-U /var/lib/homebridge -I
+```
+
+#### via pm2
+
+```
+pm2 stop homebridge; pm2 delete homebridge; pm2 start homebridge -- -I
+```
+
+## Installation
   - Install the requests library `pip install requests` or `pip3 install requests`
   - On your client computer: Move **homeScript.py** to a convenient location
     - Edit the script to include your homebridge URL, port and authorization key
