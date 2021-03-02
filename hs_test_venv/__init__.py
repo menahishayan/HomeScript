@@ -159,9 +159,19 @@ def printHelp():
 hs = HomeScript('192.168.0.106','51826','043-14-615')
 
 parser = argparse.ArgumentParser(description='Command line control of HomeBridge',add_help=False)
-parser.add_argument('-d', '--debug', action='store_true', help='generates debug log file')
-parser.add_argument('-h', '--help', action='store_true', help='prints usage info')
-parser.add_argument('-v', '--version', action='store_true', help='prints HomeScript version')
+parser.add_argument('-d', '--debug', action='store_true')
+parser.add_argument('-h', '--help', action='store_true')
+parser.add_argument('-l', '--list', action='store',nargs='*')
+parser.add_argument('-s', '--set', action='store', nargs=argparse.REMAINDER)
+parser.add_argument('-g', '--get', action='store', nargs=argparse.REMAINDER)
+parser.add_argument('all', action='store', nargs=argparse.REMAINDER)
+parser.add_argument('-v', '--version', action='store_true')
+
+parser.add_argument('-b', '--brightness', action='store_true')
+parser.add_argument('--hue', action='store_true')
+parser.add_argument('-sat', '--saturation', action='store_true')
+parser.add_argument('-t', '--temperature', action='store_true')
+
 
 args = parser.parse_args()
 # if argumentLength==1:
@@ -179,91 +189,88 @@ if args.version:
 	sys.exit()
 
 hs.getAccessories()
-# argumentOffset=0
 
-# if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
-# 	argumentOffset=1
-# 	hs.debugHandler()
+if args.list and len(args.list)>=0:
+	hs.printAccessories(args.list[0] if len(args.list)>0 else '')
+	if args.debug:
+		hs.debugHandler('end')
+	sys.exit()
+elif args.all and len(args.all)>=0:
+	if len(args.all)>=1:
+		hs.selectGroup(args.all[0].lower())
+	else:
+		printHelp()
+elif args.get and len(args.get)>=1:
+	hs.selectAccessory(args.get[0].lower())
+elif args.set and len(args.set)>=1:
+	hs.selectAccessory(args.set[0].lower())
 
-# if sys.argv[1+argumentOffset] == '-l' or sys.argv[1+argumentOffset] == '--list':
-# 	hs.printAccessories(sys.argv[2+argumentOffset] if argumentLength>(2+argumentOffset) else '')
-# 	if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
-# 		hs.debugHandler('end')
-# 	sys.exit()
-# elif sys.argv[2+argumentOffset] == 'all':
-# 	if argumentLength>(3+argumentOffset + (1 if sys.argv[1+argumentOffset] == '-s' or sys.argv[1+argumentOffset] == '--set' else 0)):
-# 		hs.selectGroup(sys.argv[3+argumentOffset].lower())
-# 	else:
-# 		printHelp()
-# else:
-# 	hs.selectAccessory(sys.argv[2+argumentOffset].lower())
+if len(hs.selectedAccessories) == 0:
+	print('Accessory/Group not found.\nHere are a list of accessories:\n')
+	hs.printAccessories('type')
+	print('\nFor usage info type \'homeScript.py -h\'')
+	sys.exit(-1)
+else:
+	if args.set:
+		setData = []
+		valueIndex = 0
 
-# if len(hs.selectedAccessories) == 0:
-# 	print('Accessory/Group not found.\nHere are a list of accessories:\n')
-# 	hs.printAccessories('type')
-# 	print('\nFor usage info type \'homeScript.py -h\'')
-# 	sys.exit(-1)
-# else:
-# 	if sys.argv[1+argumentOffset] == '-s' or sys.argv[1+argumentOffset] == '--set':
-# 		setData = []
-# 		valueIndex = 0
+		for item in hs.selectedAccessories:
+			if not args.brightness and not args.hue and not args.saturation and not args.temperature:
+				if len(args.set)==2 and args.set[1].isdigit():
+					item['value'][0]['value'] = int(args.set[1])
+				elif item['value'][0]['value'] == 0 or item['value'][0]['value'] == False:
+					item['value'][0]['value'] = 1
+				else:
+					item['value'][0]['value'] = 0
+			else:
 
-# 		for item in hs.selectedAccessories:
-# 			if sys.argv[argumentLength-2] not in ['-b', '-h', '-sat', '-t', '--brightness', '--hue', '--saturation', '--temperature'] and sys.argv[argumentLength-1] not in ['-b', '-h', '-sat', '-t', '--brightness', '--hue', '--saturation', '--temperature']:
-# 				if sys.argv[argumentLength-1].isdigit():
-# 					item['value'][0]['value'] = sys.argv[argumentLength-1]
-# 				elif item['value'][0]['value'] == 0 or item['value'][0]['value'] == False:
-# 					item['value'][0]['value'] = 1
-# 				else:
-# 					item['value'][0]['value'] = 0
-# 			else:
+				if args.brightness:
+					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Brightness'), 0)
+				elif args.hue:
+					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Hue'), 0)
+				elif args.saturation:
+					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Saturation'), 0)
+				elif args.temperature:
+					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Color Temperature'), 0)
 
-# 				if sys.argv[argumentLength-2] in ['-b', '--brightness'] or sys.argv[argumentLength-1] in ['-b', '--brightness']:
-# 					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Brightness'), 0)
-# 				elif sys.argv[argumentLength-2] in ['-h', '--hue'] or sys.argv[argumentLength-1] in ['-h', '--hue']:
-# 					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Hue'), 0)
-# 				elif sys.argv[argumentLength-2] in ['-sat', '--saturation'] or sys.argv[argumentLength-1] in ['-sat', '--saturation']:
-# 					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Saturation'), 0)
-# 				elif sys.argv[argumentLength-2] in ['-t', '--temperature'] or sys.argv[argumentLength-1] in ['-t', '--temperature']:
-# 					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Color Temperature'), 0)
+				if sys.argv[argumentLength-1].isdigit():
+					if (int(sys.argv[argumentLength-1]) <= item['value'][valueIndex]['maxValue']) and (int(sys.argv[argumentLength-1]) >= item['value'][valueIndex]['minValue']) and (int(sys.argv[argumentLength-1])%item['value'][valueIndex]['minStep'] == 0):
+						item['value'][valueIndex]['value'] = int(sys.argv[argumentLength-1])
+					else:
+						print('Error:\n   Max Value: ' + str(item['value'][valueIndex]['maxValue']) + '\n   Min Value: ' + str(item['value'][valueIndex]['minValue']) +  '\n   Min Step: ' + str(item['value'][valueIndex]['minStep']))
+				elif item['value'][valueIndex]['value'] >= ((item['value'][valueIndex]['maxValue']-item['value'][valueIndex]['minValue'])/2) - (((item['value'][valueIndex]['maxValue']-item['value'][valueIndex]['minValue'])/2)%item['value'][valueIndex]['minStep']):
+					item['value'][valueIndex]['value'] = item['value'][valueIndex]['maxValue']
+				else:
+					item['value'][valueIndex]['value'] = item['value'][valueIndex]['minValue']
 
-# 				if sys.argv[argumentLength-1].isdigit():
-# 					if (int(sys.argv[argumentLength-1]) <= item['value'][valueIndex]['maxValue']) and (int(sys.argv[argumentLength-1]) >= item['value'][valueIndex]['minValue']) and (int(sys.argv[argumentLength-1])%item['value'][valueIndex]['minStep'] == 0):
-# 						item['value'][valueIndex]['value'] = int(sys.argv[argumentLength-1])
-# 					else:
-# 						print('Error:\n   Max Value: ' + str(item['value'][valueIndex]['maxValue']) + '\n   Min Value: ' + str(item['value'][valueIndex]['minValue']) +  '\n   Min Step: ' + str(item['value'][valueIndex]['minStep']))
-# 				elif item['value'][valueIndex]['value'] >= ((item['value'][valueIndex]['maxValue']-item['value'][valueIndex]['minValue'])/2) - (((item['value'][valueIndex]['maxValue']-item['value'][valueIndex]['minValue'])/2)%item['value'][valueIndex]['minStep']):
-# 					item['value'][valueIndex]['value'] = item['value'][valueIndex]['maxValue']
-# 				else:
-# 					item['value'][valueIndex]['value'] = item['value'][valueIndex]['minValue']
+			hs.selectedAccessoryNames[item['aid']].update({'iid': item['value'][valueIndex]['iid'], 'value': item['value'][valueIndex]['value']})
+			setData.append({'aid': item['aid'],'iid': item['value'][valueIndex]['iid'], 'value': item['value'][valueIndex]['value']})
+		setReq = requests.put(hs.url + 'characteristics', headers=hs.headers, data='{"characteristics":' + str(setData).replace('\'','\"') + '}')
 
-# 			hs.selectedAccessoryNames[item['aid']].update({'iid': item['value'][valueIndex]['iid'], 'value': item['value'][valueIndex]['value']})
-# 			setData.append({'aid': item['aid'],'iid': item['value'][valueIndex]['iid'], 'value': item['value'][valueIndex]['value']})
-# 		setReq = requests.put(hs.url + 'characteristics', headers=hs.headers, data='{"characteristics":' + str(setData).replace('\'','\"') + '}')
+		if args.debug:
+			hs.debugHandler()
+			hs.debugHandler('Set characteristics response:\n'+setReq.text)
+			hs.debugHandler('End set characteristics response')
 
-# 		if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
-# 			hs.debugHandler()
-# 			hs.debugHandler('Set characteristics response:\n'+setReq.text)
-# 			hs.debugHandler('End set characteristics response')
+		try:
+			if setReq.status_code != 204:
+				print(setReq)
+				for item in setReq.json()['characteristics']:
+					print(hs.selectedAccessoryNames[item['aid']]['name'] + ' Error: ' + str(item['status']))
+					sys.exit(item['status'])
+		except:
+			if args.debug:
+				# debugHandler(json.dumps(sys.exc_info()))
+				logging.error(Exception, exc_info=True)
+				print('Exception logged: ' + exceptionFile)
 
-# 		try:
-# 			if setReq.status_code != 204:
-# 				print(setReq)
-# 				for item in setReq.json()['characteristics']:
-# 					print(hs.selectedAccessoryNames[item['aid']]['name'] + ' Error: ' + str(item['status']))
-# 					sys.exit(item['status'])
-# 		except:
-# 			if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
-# 				# debugHandler(json.dumps(sys.exc_info()))
-# 				logging.error(Exception, exc_info=True)
-# 				print('Exception logged: ' + exceptionFile)
+	elif args.get:
+		for item in hs.selectedAccessories:
+			print(hs.selectedAccessoryNames[item['aid']]['name'] + ' ' + str(item['value']))
 
-# 	elif sys.argv[1+argumentOffset] == '-g' or sys.argv[1+argumentOffset] == '--get':
-# 		for item in hs.selectedAccessories:
-# 			print(hs.selectedAccessoryNames[item['aid']]['name'] + ' ' + str(item['value']))
+	else:
+		printHelp()
 
-# 	else:
-# 		printHelp()
-
-# if sys.argv[1] == '-d' or sys.argv[1] == '--debug':
-# 	hs.debugHandler('end')
+if args.debug:
+	hs.debugHandler('end')
