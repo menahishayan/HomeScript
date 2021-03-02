@@ -1,6 +1,6 @@
 import argparse
 import sys
-from HomeScript import HomeScript
+from homescript import HomeScript
 
 __HOSTNAME__='192.168.0.106'
 __PORT__='51826'
