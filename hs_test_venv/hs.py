@@ -59,8 +59,6 @@ if args.version:
 
 if args.list and len(args.list)>=0:
 	hs.printAccessories(args.list[0] if len(args.list)>0 else '')
-	if args.debug:
-		hs.debugHandler('end')
 	sys.exit()
 elif args.get and len(args.get)>=0:
 	if args.get[0] == 'all':
@@ -97,6 +95,3 @@ else:
 
 	else:
 		printHelp()
-
-if args.debug:
-	hs.debugHandler('end')

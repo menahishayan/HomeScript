@@ -199,3 +199,6 @@ class HomeScript:
 			debugFile=open('homescript_debug_' + date.today().strftime("%Y.%m.%d") + '.log', "a")
 			debugFile.write('HSDB: ' + str(content) + '\n')
 		debugFile.close()
+
+	def __del__(self):
+		self.debugHandler('end')
