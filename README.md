@@ -11,7 +11,7 @@ Used to toggle Homebridge accessories On or Off via python script, no Home app r
 `hs.py -s MainLight 0`  | Switch off  
 `hs.py -s MainLight 1`  | Switch on  
 `hs.py -s MainLight`   | Toggle  
-`hs.py -s lifx -hue 140` | RGB Lights Support  (brightness, hue, saturation, temperature)
+`hs.py -s lifx -hue 140` | RGB Lights Support  (brightness, hue, saturation, temperature)  
 `hs.py -s desk -b +10` | Increment/Decrement values
 
 ## Easy Match
