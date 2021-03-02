@@ -26,7 +26,7 @@ You can set multiple accessories (of the same type) in a single command:
 `hs.py -s all lights 1`  
 `hs.py -s all switches 0`  
 
-**Looking for maintainers: This repo is no longer being maintained and future updates to this project may not be guaranteed. If you are interested in maintaining this project, feel free to reach out.** 
+**Looking for maintainers: If you are interested in maintaining this project, feel free to reach out.** 
 
 ## Dependencies
  - Python HomeScript API
@@ -81,7 +81,7 @@ Usage: `hs.py [option] [value]`
      - [value] : value that you want to set it to
  - all     :  Gets or sets value of multiple HomeKit accessories
    - Usage: `hs.py -g all <accessory-type>`
-hs.py -s all <accessory-type> value
+hs.py -s all \<accessory-type\> value
  - -d, --debug   : generates debug log file.
    - Usage: `hs.py -d <command>`
    - Eg: `hs.py -d -s all lights 0`
@@ -107,6 +107,8 @@ hs.setStates(1)
 hs.setValues('Brightness',250)
 ```
 | Function | Description |
+| ----- | ----------------|
+| HomeScript( hostname: str, port: str, auth: str, debug: Boolean, argv: list ) | Constructor to initialize HomeBridge Connection. Debug: Set to `True` if you want to create debug and exception logfile. Default: None. argv: Only required if debug is `True` |
 | getAccessories() | Returns raw list of all available accessories on the Bridge |
 | selectAccessories( searchString: str ) | Saves matching accessory into selectedAccessories and returns them |
 | selectGroup( searchString: str ) | Saves all matching accessories into selectedAccessories and returns them |
@@ -134,6 +136,8 @@ PRs and commits that you make to this repo must include the following:
 ## To Do
 ☑️ Color control for RGB and Hue Lights  
 ⬜️ Control for PositionOpeners, GarageDoorOpener, LockMechanism  
+⬜️ WebColors  
+⬜️ Increment/Decrement values  
 ☑️ Querying API interface to return status of devices to `stdout`  
 ☑️ Automation creation, viewing and monitoring without Home Hub  
 
