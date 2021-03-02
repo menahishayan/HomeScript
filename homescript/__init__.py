@@ -9,11 +9,11 @@ import logging
 from datetime import date
 # to add webcolors
 
-__version__ = "5.1.1"
+__version__ = "5.2"
 
 class HomeScript:
 	def __init__(self,hostname,port, auth, debug=None, argv=None):
-		self.__version__ = '5.1.1'
+		self.__version__ = '5.2'
 		self.url = 'http://' + hostname + ':' + str(port) + '/'
 		self.headers = {'Content-Type': 'Application/json', 'authorization': auth}
 
@@ -154,6 +154,12 @@ class HomeScript:
 			if value.isdigit():
 				if (int(value) <= item['value'][valueIndex]['maxValue']) and (int(value) >= item['value'][valueIndex]['minValue']) and (int(value)%item['value'][valueIndex]['minStep'] == 0):
 					item['value'][valueIndex]['value'] = int(value)
+				else:
+					print('Error:\n   Max Value: ' + str(item['value'][valueIndex]['maxValue']) + '\n   Min Value: ' + str(item['value'][valueIndex]['minValue']) +  '\n   Min Step: ' + str(item['value'][valueIndex]['minStep']))
+			# Increment/Decrement
+			elif value.startswith('+') or value.startswith('-'):
+				if int(value[1:])%item['value'][valueIndex]['minStep'] == 0:
+					item['value'][valueIndex]['value'] += int(value[1:]) if value[0] == '+' else -int(value[1:])
 				else:
 					print('Error:\n   Max Value: ' + str(item['value'][valueIndex]['maxValue']) + '\n   Min Value: ' + str(item['value'][valueIndex]['minValue']) +  '\n   Min Step: ' + str(item['value'][valueIndex]['minStep']))
 			elif item['value'][valueIndex]['value'] >= ((item['value'][valueIndex]['maxValue']-item['value'][valueIndex]['minValue'])/2) - (((item['value'][valueIndex]['maxValue']-item['value'][valueIndex]['minValue'])/2)%item['value'][valueIndex]['minStep']):

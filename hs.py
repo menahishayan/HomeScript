@@ -28,7 +28,7 @@ def printHelp():
 	print('                     Usage: hs.py -g all <accessory-type>')
 	print('                            hs.py -s all <accessory-type> value\n')
 	print('        <attrib>:  Sets value of accessory attribute')
-	print('                     Usage: hs.py -s <accessory-name> <attribute> value')
+	print('                     Usage: hs.py -s <accessory-name> <attribute> [+-]value')
 	print('                            hs.py -s lifx -hue 250\n')
 	print('  -d, --debug   : generates debug log file.')
 	print('                     Usage: hs.py -d <command>')

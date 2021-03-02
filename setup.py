@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="homescript",
-    version="5.1.1",
+    version="5.2",
     author="Menahi Shayan",
     author_email="menahi.shayan@gmail.com",
     description="HomeScript CLI: Command Line Control of HomeBridge",

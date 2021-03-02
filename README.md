@@ -11,7 +11,8 @@ Used to toggle Homebridge accessories On or Off via python script, no Home app r
 `hs.py -s MainLight 0`  | Switch off  
 `hs.py -s MainLight 1`  | Switch on  
 `hs.py -s MainLight`   | Toggle  
-`hs.py -s lifx --hue 140` | RGB Lights Support  (brightness, hue, saturation, temperature)
+`hs.py -s lifx -hue 140` | RGB Lights Support  (brightness, hue, saturation, temperature)
+`hs.py -s desk -b +10` | Increment/Decrement values
 
 ## Easy Match
 The script doesn't require full names of the accessories.  
@@ -75,7 +76,7 @@ Usage: `hs.py [option] [value]`
      - -hue : adjusts accessory hue
      - -sat : adjusts accessory saturation
      - -t : adjusts accessory color temperature
-     - [value] : value that you want to set it to
+     - [value] : value that you want to set it to. Prefix +/- to inc/dec
  - all     :  Gets or sets value of multiple HomeKit accessories
    - Usage: `hs.py -g all <accessory-type>`
 hs.py -s all \<accessory-type\> value
@@ -141,6 +142,9 @@ PRs and commits that you make to this repo must include the following:
 <hr/>
 
 ## Changelog
+### v5.2
+ - Added support for Increment/Decrement values
+
 ### v5.1.1
  - Fixed import bug
 
