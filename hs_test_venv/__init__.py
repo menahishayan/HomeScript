@@ -164,25 +164,15 @@ parser.add_argument('-h', '--help', action='store_true')
 parser.add_argument('-l', '--list', action='store',nargs='*')
 parser.add_argument('-s', '--set', action='store', nargs=argparse.REMAINDER)
 parser.add_argument('-g', '--get', action='store', nargs=argparse.REMAINDER)
-parser.add_argument('all', action='store', nargs=argparse.REMAINDER)
 parser.add_argument('-v', '--version', action='store_true')
 
-parser.add_argument('-b', '--brightness', action='store_true')
-parser.add_argument('--hue', action='store_true')
-parser.add_argument('-sat', '--saturation', action='store_true')
-parser.add_argument('-t', '--temperature', action='store_true')
-
-
 args = parser.parse_args()
-# if argumentLength==1:
-# 	printHelp()
+
+if argumentLength==1:
+	printHelp()
 
 if args.help:
 	printHelp()
-
-if args.debug:
-	logging.basicConfig(filename=exceptionFile,filemode = 'a',encoding='utf-8', level=logging.DEBUG)
-	hs.debugHandler()
 
 if args.version:
 	print(__version__)
@@ -190,20 +180,25 @@ if args.version:
 
 hs.getAccessories()
 
+if args.debug:
+	logging.basicConfig(filename=exceptionFile,filemode = 'a',encoding='utf-8', level=logging.DEBUG)
+	hs.debugHandler()
+
 if args.list and len(args.list)>=0:
 	hs.printAccessories(args.list[0] if len(args.list)>0 else '')
 	if args.debug:
 		hs.debugHandler('end')
 	sys.exit()
-elif args.all and len(args.all)>=0:
-	if len(args.all)>=1:
-		hs.selectGroup(args.all[0].lower())
+elif args.get and len(args.get)>=0:
+	if args.get[0] == 'all':
+		hs.selectGroup(args.get[1].lower())
 	else:
-		printHelp()
-elif args.get and len(args.get)>=1:
-	hs.selectAccessory(args.get[0].lower())
-elif args.set and len(args.set)>=1:
-	hs.selectAccessory(args.set[0].lower())
+		hs.selectAccessory(args.get[0].lower())
+elif args.set and len(args.set)>=0:
+	if args.set[0] == 'all':
+		hs.selectGroup(args.set[1].lower())
+	else:
+		hs.selectAccessory(args.set[0].lower())
 
 if len(hs.selectedAccessories) == 0:
 	print('Accessory/Group not found.\nHere are a list of accessories:\n')
@@ -216,7 +211,7 @@ else:
 		valueIndex = 0
 
 		for item in hs.selectedAccessories:
-			if not args.brightness and not args.hue and not args.saturation and not args.temperature:
+			if '-b' not in args.set and '-hue' not in args.set and '-sat' not in args.set and '-t' not in args.set:
 				if len(args.set)==2 and args.set[1].isdigit():
 					item['value'][0]['value'] = int(args.set[1])
 				elif item['value'][0]['value'] == 0 or item['value'][0]['value'] == False:
@@ -224,14 +219,13 @@ else:
 				else:
 					item['value'][0]['value'] = 0
 			else:
-
-				if args.brightness:
+				if '-b' in args.set:
 					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Brightness'), 0)
-				elif args.hue:
+				elif '-hue' in args.set:
 					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Hue'), 0)
-				elif args.saturation:
+				elif '-sat' in args.set:
 					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Saturation'), 0)
-				elif args.temperature:
+				elif '-t' in args.set:
 					valueIndex = next((item['value'].index(v) for v in item['value'] if v['description'] == 'Color Temperature'), 0)
 
 				if sys.argv[argumentLength-1].isdigit():
