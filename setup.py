@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="homescript",
-    version="5.1.0",
+    version="5.1.1",
     author="Menahi Shayan",
     author_email="menahi.shayan@gmail.com",
     description="HomeScript CLI: Command Line Control of HomeBridge",
@@ -19,4 +19,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.7',
+    install_requires=["requests"]
 )

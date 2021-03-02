@@ -9,3 +9,6 @@ bin
 include
 lib
 __pycache__
+*.egg-info
+dist
+build

@@ -1,6 +1,6 @@
 import argparse
 import sys
-from homescript import HomeScript
+import homescript
 
 __HOSTNAME__='192.168.0.106'
 __PORT__='51826'
@@ -51,7 +51,7 @@ parser.add_argument('-g', '--get', action='store', nargs=argparse.REMAINDER)
 parser.add_argument('-v', '--version', action='store_true')
 args = parser.parse_args()
 
-hs = HomeScript(__HOSTNAME__,__PORT__,__AUTH__, args.debug, sys.argv)
+hs = homescript.HomeScript(__HOSTNAME__,__PORT__,__AUTH__, args.debug, sys.argv)
 
 if argumentLength==1 or args.help:
 	printHelp()
@@ -62,7 +62,8 @@ if args.version:
 
 if args.list and len(args.list)>=0:
 	hs.printAccessories(args.list[0] if len(args.list)>0 else '')
-	hs.debugHandler('end')
+	if args.debug:
+		hs.debugHandler('end')
 	sys.exit()
 elif args.get and len(args.get)>=0:
 	if args.get[0] == 'all':
@@ -79,7 +80,8 @@ if len(hs.selectedAccessories) == 0:
 	print('Accessory/Group not found.\nHere are a list of accessories:\n')
 	hs.printAccessories('type')
 	print('\nFor usage info type \'hs.py -h\'')
-	hs.debugHandler('end')
+	if args.debug:
+		hs.debugHandler('end')
 	sys.exit(-1)
 else:
 	if args.set:
@@ -101,4 +103,5 @@ else:
 	else:
 		printHelp()
 
-hs.debugHandler('end')
+if args.debug:
+	hs.debugHandler('end')

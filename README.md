@@ -28,9 +28,6 @@ You can set multiple accessories (of the same type) in a single command:
 
 **Looking for maintainers: If you are interested in maintaining this project, feel free to reach out.** 
 
-## Dependencies
- - Python HomeScript API
-
 ## Setup
   Important: HomeBridge **must** be run in insecure mode for this script to work!
 
@@ -91,10 +88,10 @@ hs.py -s all \<accessory-type\> value
 ## API
 As of v5.1+ HomeScript is now a fully importable API
 ```python
-import HomeScript
+import homescript
 
 # Initialize with hostname, port and auth code. Debug and sys.argv are optional
-hs = HomeScript(hostname, port, auth, [debug], [sys.argv])
+hs = homescript.HomeScript(hostname, port, auth, [debug], [sys.argv])
 
 # Select an accessory or group of accessories. Any get/set/print operation requires accessories to be selected first.
 hs.selectAccessory('mainlight')
@@ -144,6 +141,9 @@ PRs and commits that you make to this repo must include the following:
 <hr/>
 
 ## Changelog
+### v5.1.1
+ - Fixed import bug
+
 ### v5.1
  - Rewritten from the ground up to be object oriented
  - Now features an importable API
