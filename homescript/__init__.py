@@ -201,4 +201,7 @@ class HomeScript:
 		debugFile.close()
 
 	def __del__(self):
-		self.debugHandler('end')
+		try:
+			self.debugHandler('end')
+		except:
+			None

@@ -59,6 +59,7 @@ if args.version:
 
 if args.list and len(args.list)>=0:
 	hs.printAccessories(args.list[0] if len(args.list)>0 else '')
+	hs.debugHandler('end')
 	sys.exit()
 elif args.get and len(args.get)>=0:
 	if args.get[0] == 'all':
@@ -75,6 +76,7 @@ if len(hs.selectedAccessories) == 0:
 	print('Accessory/Group not found.\nHere are a list of accessories:\n')
 	hs.printAccessories('type')
 	print('\nFor usage info type \'homeScript.py -h\'')
+	hs.debugHandler('end')
 	sys.exit(-1)
 else:
 	if args.set:
@@ -95,3 +97,5 @@ else:
 
 	else:
 		printHelp()
+
+hs.debugHandler('end')
