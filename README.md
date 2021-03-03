@@ -135,7 +135,7 @@ PRs and commits that you make to this repo must include the following:
 ☑️ Color control for RGB and Hue Lights  
 ⬜️ Control for PositionOpeners, GarageDoorOpener, LockMechanism  
 ⬜️ WebColors  
-⬜️ Increment/Decrement values  
+☑️ Increment/Decrement values  
 ☑️ Querying API interface to return status of devices to `stdout`  
 ☑️ Automation creation, viewing and monitoring without Home Hub  
 
