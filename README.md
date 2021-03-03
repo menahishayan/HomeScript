@@ -144,6 +144,7 @@ PRs and commits that you make to this repo must include the following:
 ## Changelog
 ### v5.2
  - Added support for Increment/Decrement values
+ - HS Automations and HS Apps are now deprecated
 
 ### v5.1.1
  - Fixed import bug
