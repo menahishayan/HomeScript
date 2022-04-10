@@ -10,10 +10,7 @@ import sys
 import inspect
 
 # Import homescript that is 2 folders before.
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(os.path.dirname(currentdir))
-sys.path.insert(0, parentdir)
-
+sys.path.append('..\..\..\homescript')
 import homescript
 
 __HOSTNAME__='192.168.0.106'
