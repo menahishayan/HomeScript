@@ -4,6 +4,7 @@
     The script is executed on an infinite loop to exit, CTRL + C.
 """
 
+import argparse
 import time
 import os
 import sys
@@ -44,16 +45,20 @@ def blink_accessory(name, time_sec):
     except KeyboardInterrupt:
         print("Exiting...")
 
+parser = argparse.ArgumentParser(description='Command line blink accessory', add_help=True)
+parser.add_argument('-t', '--time', type=int, required=True, help='Time in seconds between state ON and OFF')
+args = parser.parse_args()
+
 start = False
 
 # To wait to Homebridge to start
 while False == start:
     try:
         # Initialize with hostname, port and auth code. Debug and sys.argv are optional
-        hs = homescript.HomeScript(__HOSTNAME__, __PORT__, __AUTH__)
+        hs = homescript.HomeScript(__HOSTNAME__, __PORT__, __AUTH__, True)
         start = True
     except Exception as e:
         print("An exception occurred!")
         print(e)
 
-blink_accessory(accessory, 1)
+blink_accessory(accessory, args.time)
