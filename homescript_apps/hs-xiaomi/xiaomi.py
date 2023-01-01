@@ -1,6 +1,5 @@
 def get_temperature(hs):
     hs_print_output = hs.getSelectedItems()
-    #print(hs_print_output)
     for item in hs_print_output:
         #print(item)
         #print(item["value"])
