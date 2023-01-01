@@ -1,6 +1,5 @@
-""" Reads the temperature and humidity from a Xiaomi Aqara Temperature and Humidity Sensor
-    through a Aqara Air Conditioning Companion Gateway.
-"""
+""" Reads the state of the realy from a TP-Link Smart Plug. 
+ """
 
 def get_state(hs):
     """ Reads the state of the realy from a TP-Link Smart Plug. 
