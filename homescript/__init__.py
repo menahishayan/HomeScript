@@ -21,12 +21,14 @@ class HomeScript:
 		self.selectedAccessories=[]
 		self.selectedAccessoryNames={}
 
-		self.getAccessories()
-
 		self.debug = debug
 		self.exceptionFile='homescript_exception_' + date.today().strftime("%Y.%m.%d") + '.log'
 		if self.debug:
+			global getAcc
+			getAcc = ""
 			self.debugHandler('init',argv)
+
+		self.getAccessories()
 
 	def getAccessories(self):
 		global getAcc
