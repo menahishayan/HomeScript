@@ -65,6 +65,10 @@ class HomeScript:
 				logging.error(Exception, exc_info=True)
 				print('Exception logged: ' + self.exceptionFile)
 
+	def deselectAll(self):
+		self.selectedAccessories=[]
+		self.selectedAccessoryNames={}
+		
 	def selectGroup(self,inputName):
 		try:
 			for key in self.accessories:
