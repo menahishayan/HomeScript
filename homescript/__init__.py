@@ -31,7 +31,7 @@ class HomeScript:
 	def getAccessories(self):
 		global getAcc
 		try:
-			getAcc = requests.get(self.url + 'accessories', headers=self.headers)
+			getAcc = requests.get(self.url + 'accessories', headers=self.headers, timeout=30)
 			if getAcc.status_code == 200:
 				getAcc = getAcc.json()
 			# load sample data for debugging
